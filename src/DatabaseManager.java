@@ -1,5 +1,3 @@
-package bank_account_manager;
-
 import java.sql.*;
 
 public class DatabaseManager {
