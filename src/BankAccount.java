@@ -13,6 +13,8 @@ public class BankAccount {
 	private double amount;
 	private String firstName, LastName, loginPhrase;
 
+	private String error_message;
+
 	// Initialized our custom DatabaseManager class
 	public BankAccount() {
 		this.dm = new DatabaseManager("3307", "bank_db", "root", "");
@@ -21,18 +23,21 @@ public class BankAccount {
 	// Responsible for creating users
 	// Takes 3 parameter: first name, last name and login phrase
 	public void createUserAccount(String firstName, String lastName, String loginPhrase) {
-		DatabaseManager.executeUpdateQuery(String.format("INSERT INTO `user`(`first_name`, `last_name`, `login_phrase`) " 
-							+ "VALUES ('%s','%s','%s')",firstName,lastName,loginPhrase));
+		DatabaseManager.executeUpdateQuery(String.format(
+				"INSERT INTO `user`(`first_name`, `last_name`, `login_phrase`) " + "VALUES ('%s','%s','%s')", firstName,
+				lastName, loginPhrase));
 		getUserInfo(loginPhrase);
-		DatabaseManager.executeUpdateQuery(String.format("INSERT INTO `account`(`user_id`, `balance`) "
-				+ "VALUES ('%s','%s')",userID,0.00));
+		DatabaseManager.executeUpdateQuery(
+				String.format("INSERT INTO `account`(`user_id`, `balance`) " + "VALUES ('%s','%s')", userID, 0.00));
+
+		setError_message(DatabaseManager.exceptionErrorMessage);
 	}
 
 	// Using the loginPhrase get and set the basic user information in the class
 	public void getUserInfo(String loginPhrase) {
 		boolean success = false;
 		ResultSet rs = DatabaseManager.executeQuery("SELECT * FROM user");
-		
+
 		try {
 			while (rs.next()) {
 				if (rs.getString("login_phrase").equals(loginPhrase)) {
@@ -48,53 +53,64 @@ public class BankAccount {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+			setError_message(DatabaseManager.exceptionErrorMessage);
 		}
-
-//		if (success) {
-//			System.out.println("Successfully logged in");
-//		} else {
-//			System.out.println("Incorrect passphrase..");
-//		}
 	}
-	
+
 	// Responsible for getting the amount for the specific user
 	public void getamountInfo() {
-		ResultSet rs = DatabaseManager.executeQuery("SELECT * FROM `account` WHERE user_id="+userID);
+		boolean success = false;
+		ResultSet rs = DatabaseManager.executeQuery("SELECT * FROM `account` WHERE user_id=" + userID);
 		try {
 			while (rs.next()) {
 				if (rs.getInt("user_id") == Integer.parseInt(userID)) {
-					
+
 					this.setAmount(Double.parseDouble(rs.getString("balance")));
-					
+					success = true;
+					break;
+
 				}
 
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+			setError_message(DatabaseManager.exceptionErrorMessage);
+		}
+
+		if (success) {
+		} else {
+
+			this.setAmount(-1);
 		}
 	}
-	
-	
-	// Responsible for adding the current amount with the deposit amount and add them to the db
+
+	// Responsible for adding the current amount with the deposit amount and add
+	// them to the db
 	public void deposit(double amount) {
 		double current_amount = this.getAmount();
 		current_amount += amount;
-		
-		DatabaseManager.executeUpdateQuery(String.format("UPDATE `account` SET `user_id`='%s',`balance`='%s'",userID,Double.toString(current_amount)));
+
+		this.setAmount(current_amount);
+
+		DatabaseManager.executeUpdateQuery(String.format("UPDATE `account` SET `user_id`='%s',`balance`='%s'", userID,
+				Double.toString(current_amount)));
+		setError_message(DatabaseManager.exceptionErrorMessage);
 	}
-	
-	// Responsible for subtracting the current amount with the withdraw amount and add them to the db
+
+	// Responsible for subtracting the current amount with the withdraw amount and
+	// add them to the db
 	public void withdraw(double amount) {
 		double current_amount = this.getAmount();
-		if(amount > current_amount) {
-			System.out.println("Insuffient amount!!");
-		}
-		else {
+		if (amount > current_amount) {
+			setError_message("Insuffient amount!!");
+		} else {
 			current_amount -= amount;
+			this.setAmount(current_amount);
 		}
-		
-		
-		DatabaseManager.executeUpdateQuery(String.format("UPDATE `account` SET `user_id`='%s',`balance`='%s'",userID,Double.toString(current_amount)));
+
+		DatabaseManager.executeUpdateQuery(String.format("UPDATE `account` SET `user_id`='%s',`balance`='%s'", userID,
+				Double.toString(current_amount)));
+		setError_message(DatabaseManager.exceptionErrorMessage);
 	}
 
 	// Gets userID
@@ -145,6 +161,16 @@ public class BankAccount {
 	// Sets loginPhrase
 	public void setLoginPhrase(String loginPhrase) {
 		this.loginPhrase = loginPhrase;
+	}
+
+	// Gets errorMessage
+	public String getError_message() {
+		return error_message;
+	}
+
+	// Sets errorMessage
+	public void setError_message(String error_message) {
+		this.error_message = error_message;
 	}
 
 }

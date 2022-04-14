@@ -10,13 +10,18 @@ public class DatabaseManager {
 	static Statement stmt;
 	static ResultSet rs;
 
-	// Initialize our constructor with port, name of the database, its user and password
+	static String exceptionErrorMessage;
+
+	// Initialize our constructor with port, name of the database, its user and
+	// password
 	public DatabaseManager(String port, String database_name, String user, String password) {
+		exceptionErrorMessage = "";
 		try {
 			this.con = DriverManager.getConnection("jdbc:mysql://localhost:" + port + "/" + database_name, user,
 					password);
+			exceptionErrorMessage = "None";
 		} catch (SQLException e) {
-			System.out.println(e);
+			exceptionErrorMessage = e.getMessage();
 		}
 	}
 
@@ -25,9 +30,10 @@ public class DatabaseManager {
 		try {
 			stmt = con.createStatement();
 			rs = stmt.executeQuery(sql_query);
+			exceptionErrorMessage = "None";
 
 		} catch (Exception e) {
-			System.out.println(e);
+			exceptionErrorMessage = e.getMessage();
 		}
 		return rs;
 
@@ -38,9 +44,10 @@ public class DatabaseManager {
 		try {
 			stmt = con.createStatement();
 			stmt.executeUpdate(sql_query);
+			exceptionErrorMessage = "None";
 
 		} catch (Exception e) {
-			System.out.println(e);
+			exceptionErrorMessage = e.getMessage();
 		}
 
 	}
