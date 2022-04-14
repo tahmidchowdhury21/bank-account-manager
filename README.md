@@ -24,7 +24,7 @@ This application simulates some basic bank transactions from our daily lives, su
 - Download XAMP from https://www.apachefriends.org/index.html
 - Then you have to link jdbc.jar file to one of java's external libraries
 - After, that you could create your own database and set it up that way 
-- Or, use mysql data from the repo and paste it inside C:\xampp\mysql\data to
+- Or, copy bank_db from the repository and paste it inside C:\xampp\mysql\data to
 - replicate my database
 
 Finally Just run BankAccountGUI.java in an IDE. That should start up the application. :-)
