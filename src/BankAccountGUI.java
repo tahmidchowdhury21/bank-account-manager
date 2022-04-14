@@ -43,7 +43,7 @@ public class BankAccountGUI {
 		frame.setLayout(new FlowLayout(FlowLayout.CENTER));
 		frame.setResizable(false);
 
-		JPanelWithBackground panel = new JPanelWithBackground("src/background.jpg");
+		JPanelWithBackground panel = new JPanelWithBackground("src/images/background.jpg");
 		panel.setLayout(new FlowLayout()); // or whatever layout you want
 		frame.setContentPane(panel);
 
