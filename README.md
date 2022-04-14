@@ -4,15 +4,27 @@ This application simulates some basic bank transactions from our daily lives, su
 ## Built With
 
 - Java
+- MYSQL Backend Database
 
 ## Screenshots
 
-![Alt text](/../dev/src/screenshots/screenshot%231.JPG?raw=true)
+![Basic When Open Application Screenshot](/../dev/src/images/screenshot.JPG?raw=true)
+
 ## Demo
+### Create Account<br>
+![Create Account](/../dev/src/images/create_account.gif?raw=true)
+### Login<br>
+![Login](/../dev/src/images/login.gif?raw=true)
+### Some Error Handling<br>
+![Error Handling](/../dev/src/images/error_handling.gif?raw=true)
 
-Insert gif or link to demo
 
+## Setup/Installation/Intructions to run the application
+- Download java jdbc from https://dev.mysql.com/downloads/connector/j/
+- Download XAMP from https://www.apachefriends.org/index.html
+- Then you have to link jdbc.jar file to one of java's external libraries
+- After, that you could create your own database and set it up that way 
+- Or, use mysql data from the repo and paste it inside C:\xampp\mysql\data to
+- replicate my database
 
-## Usage/Examples
-
-Just run BankAccountGUI.java in an IDE. That should start up the application. :-)
+Finally Just run BankAccountGUI.java in an IDE. That should start up the application. :-)
